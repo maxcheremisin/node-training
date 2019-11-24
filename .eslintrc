@@ -1,0 +1,44 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier/@typescript-eslint"],
+    "plugins": ["@typescript-eslint"],
+    "env": {
+        "es6": true,
+        "node": true,
+        "browser": true
+    },
+    "rules": {
+        "eqeqeq": "off",
+        "no-void": "off",
+        "no-console": "off",
+        "no-plusplus": "off",
+        "no-sequences": "off",
+        "no-return-assign": "off",
+        "no-throw-literal": "off",
+        "no-nested-ternary": "off",
+        "consistent-return": "off",
+        "no-param-reassign": "off",
+        "prefer-destructuring": "off",
+        "no-underscore-dangle": "off",
+        "no-restricted-syntax": "off",
+        "array-callback-return": "off",
+        "class-methods-use-this": "off",
+        "no-useless-constructor": "off",
+        "lines-between-class-members": "off",
+        "prefer-promise-reject-errors": "off",
+        "quotes": ["error", "single", {"allowTemplateLiterals": true}],
+        "import/no-unresolved": "off",
+        "import/no-default-export": "error",
+        "import/prefer-default-export": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", {"args": "after-used", "ignoreRestSiblings": true}],
+        "prettier/prettier": ["error", {"endOfLine": "auto"}]
+    }
+}

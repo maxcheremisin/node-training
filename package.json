@@ -1,0 +1,32 @@
+{
+    "name": "node-mentoring",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.ts",
+    "scripts": {
+        "start": "nodemon",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "pretty": "prettier --write src/**/*.ts"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "4.17.1",
+        "nodemon": "1.19.4"
+    },
+    "devDependencies": {
+        "@types/express": "4.17.2",
+        "@types/node": "12.12.7",
+        "@typescript-eslint/eslint-plugin": "2.6.1",
+        "@typescript-eslint/parser": "2.6.1",
+        "eslint": "6.6.0",
+        "eslint-config-airbnb-base": "14.0.0",
+        "eslint-config-prettier": "6.5.0",
+        "eslint-plugin-import": "2.18.2",
+        "eslint-plugin-prettier": "3.1.1",
+        "prettier": "1.19.1",
+        "ts-node": "8.4.1",
+        "typescript": "3.7.2"
+    }
+}
