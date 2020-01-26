@@ -4,7 +4,7 @@ import joi from 'joi';
 import PasswordComplexity from 'joi-password-complexity';
 import {User} from './types';
 
-type UserKeys = keyof Omit<User, 'id'>;
+type UserKeys = keyof Omit<User, 'user_id'>;
 type UserRules = Record<UserKeys, joi.StringSchema | joi.BooleanSchema | joi.NumberSchema>;
 
 function getRequiredUserKeys<T extends UserKeys>(keys: T extends UserKeys ? UserKeys[] : never) {
@@ -27,7 +27,7 @@ const rules: UserRules = {
         .strict()
         .min(4)
         .max(130),
-    isDeleted: joi.boolean(),
+    is_deleted: joi.boolean(),
 };
 
 export const userPutSchema = joi.object().keys(rules);
@@ -52,4 +52,16 @@ export function validateUserSchema(schema: joi.ObjectSchema): express.RequestHan
 export const parseError: express.ErrorRequestHandler = (error: httpErrors.HttpError, request, response, next) => {
     response.status(error.status).json(error);
     next();
+};
+
+export const handleSequelizeError = (message: {unique?: string} = {}) => (error: any) => {
+    if ('errors' in error && Array.isArray(error.errors)) {
+        for (const err of error.errors) {
+            if (err.type === 'unique violation') {
+                throw new httpErrors.Conflict(message.unique || err.message);
+            }
+        }
+    }
+
+    throw new httpErrors.InternalServerError(String(error));
 };

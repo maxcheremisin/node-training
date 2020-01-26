@@ -1,13 +1,13 @@
 enum UserBrandId {
-    _ = '',
+    _ = 0,
 }
 
 export type UserId = UserBrandId;
 
 export type User = {
-    id: UserId;
+    user_id: UserId;
     login: string;
     password: string;
     age: number;
-    isDeleted: boolean;
+    is_deleted: boolean;
 };

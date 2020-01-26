@@ -1,79 +1,99 @@
 import httpErrors from 'http-errors';
-import uuid from 'uuid/v5';
+import {Sequelize, Model, DataTypes, Op} from 'sequelize';
 import {User, UserId} from './types';
+import {handleSequelizeError} from './schema';
 
-export const users = new Map<UserId, User>();
+const db = process.env.DB || '';
+const dbUser = process.env.DB_USER || '';
+const dbPassword = process.env.DB_PASSWORD;
 
-export function generateId(login: string) {
-    return uuid(login, uuid.URL) as UserId;
+const sequelize = new Sequelize(db, dbUser, dbPassword, {dialect: 'postgres'});
+
+class UserModel extends Model implements User {
+    public user_id!: UserId;
+    public login!: string;
+    public password!: string;
+    public age!: number;
+    public is_deleted!: boolean;
 }
 
-export function validateLogin<T extends Partial<User>>(payload: T) {
-    const {login} = payload;
+UserModel.init(
+    {
+        login: {
+            type: DataTypes.STRING,
+            unique: true,
+        },
+        user_id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        password: {
+            type: DataTypes.CHAR,
+        },
+        age: DataTypes.INTEGER,
+        is_deleted: DataTypes.BOOLEAN,
+    },
+    {sequelize, tableName: 'users', timestamps: false},
+);
 
-    const found = getAllUsers().find(user => user.login === login);
+export async function getUserById(id: UserId) {
+    const user = await UserModel.findOne({
+        where: {
+            user_id: id,
+            is_deleted: {
+                [Op.or]: [null, false],
+            },
+        },
+    }).catch(handleSequelizeError());
 
-    if (found) {
-        throw new httpErrors.BadRequest(`User with login ${login} already exists`);
-    }
-
-    return payload;
-}
-
-export function appendUser(id: UserId, user: User) {
-    users.set(id, user);
-    return user;
-}
-
-export function getAllUsers() {
-    return Array.from(users.values());
-}
-
-export function getUserById(id: UserId) {
-    const user = users.get(id);
-
-    if (!user || user.isDeleted) {
+    if (!user) {
         throw new httpErrors.NotFound(`No user with id ${id}`);
     }
 
     return user;
 }
 
-export function createUser(payload: Omit<User, 'id'>) {
-    const user = validateLogin(payload);
-    const id = generateId(user.login);
-
-    return appendUser(id, {...user, id});
+export function createUser(payload: Omit<User, 'user_id'>) {
+    return UserModel.create(payload).catch(handleSequelizeError({unique: `User with login ${payload.login} already exists`}));
 }
 
 export function updateUser(id: UserId, payload: Partial<User>) {
-    const prevUser = getUserById(id);
-    const isLoginChanged = prevUser.login !== payload.login;
-    const nextUser = isLoginChanged ? validateLogin(payload) : payload;
-
-    return appendUser(id, {...prevUser, ...nextUser, id});
+    return UserModel.update(payload, {
+        where: {
+            user_id: id,
+            is_deleted: {
+                [Op.or]: [null, false],
+            },
+        },
+    }).catch(handleSequelizeError({unique: `User with login ${payload.login} already exists`}));
 }
 
 export function deleteUser(id: UserId) {
-    const user = getUserById(id);
-
-    return appendUser(id, {...user, isDeleted: true});
+    return UserModel.update(
+        {is_deleted: true},
+        {
+            where: {
+                user_id: id,
+                is_deleted: {
+                    [Op.or]: [null, false],
+                },
+            },
+        },
+    ).catch(handleSequelizeError());
 }
 
 export function filterUsers(loginSubstring: string, limit: number) {
-    const result: User[] = [];
-
-    const allUsers = getAllUsers().sort((a, b) => a.login.localeCompare(b.login));
-
-    for (const user of allUsers) {
-        if (result.length == limit) {
-            break;
-        }
-
-        if (user.login.includes(loginSubstring)) {
-            result.push(user);
-        }
-    }
-
-    return result;
+    return UserModel.findAll({
+        limit,
+        order: [['login', 'ASC']],
+        where: {
+            login: {
+                [Op.like]: `%${loginSubstring}%`,
+            },
+            is_deleted: {
+                [Op.or]: [null, false],
+            },
+        },
+    }).catch(handleSequelizeError());
 }
