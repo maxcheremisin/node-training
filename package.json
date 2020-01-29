@@ -8,6 +8,7 @@
         "task1.1": "nodemon --exec ts-node src/task1/task1.1.ts",
         "task1.2": "nodemon --exec ts-node src/task1/task1.2.ts",
         "task2": "cross-env DB=postgres DB_USER=postgres DB_PASSWORD=1 nodemon --exec ts-node src/task2/task2.ts",
+        "sql_init": "psql -h localhost -U postgres -p 5432 -a -q -f src/task2/users.sql",
         "lint": "eslint src/**/*.ts",
         "lint:fix": "eslint src/**/*.ts --fix",
         "pretty": "prettier --write src/**/*.ts"
