@@ -1,10 +1,9 @@
-import express from 'express';
+import {Server} from 'server';
+import {UserController} from 'controllers/user.controller';
+import {GroupController} from 'controllers/group.controller';
+import {UserGroupController} from 'controllers/user-group.controller';
+import {env} from 'config/env';
 
-const app = express();
-const port = 3005;
+const server = new Server([new UserController(), new GroupController(), new UserGroupController()], env.port);
 
-app.get('*', (req, res) => res.json(req.url));
-
-app.listen(port, () => {
-    console.log(`Server is running on ${port}`);
-});
+server.listen();
