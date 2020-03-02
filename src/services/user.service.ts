@@ -1,7 +1,7 @@
 import httpErrors from 'http-errors';
 import {Op} from 'sequelize';
 import {User, UserId} from 'types';
-import {handleSequelizeError} from 'helpers';
+import {handleSequelizeError} from 'services/error-handler.service';
 import {model} from 'models';
 
 export async function getUserById(id: UserId) {
