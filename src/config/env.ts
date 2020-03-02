@@ -18,4 +18,7 @@ export const env = {
         port: process.env.DB_PORT,
         dialect: process.env.DB_DIALECT as Dialect,
     },
+    log: {
+        level: process.env.LOG_LEVEL || 'silly',
+    },
 };

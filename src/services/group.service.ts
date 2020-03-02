@@ -1,6 +1,6 @@
 import httpErrors from 'http-errors';
 import {Group, GroupId} from 'types';
-import {handleSequelizeError} from 'helpers';
+import {handleSequelizeError} from 'services/error-handler.service';
 import {model} from 'models';
 
 export async function getGroupById(id: GroupId) {

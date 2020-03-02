@@ -1,7 +1,7 @@
-import * as types from 'types';
 import express from 'express';
+import {ControllerError} from 'services/error-handler.service';
+import * as types from 'types';
 import * as UserGroupService from 'services/user-group.service';
-import {parseError} from '../helpers';
 
 export class UserGroupController implements types.Controller {
     public readonly router = express.Router();
@@ -17,7 +17,7 @@ export class UserGroupController implements types.Controller {
 
                 res.status(200).json(result);
             } catch (error) {
-                parseError(error, req, res, next);
+                next(new ControllerError('UserGroup', 'addUsersToGroup', error));
             }
         });
 

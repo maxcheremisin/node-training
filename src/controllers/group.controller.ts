@@ -1,8 +1,8 @@
 import express from 'express';
+import {ControllerError} from 'services/error-handler.service';
 import * as types from 'types';
 import * as GroupValidator from 'validators/group.validator';
 import * as GroupService from 'services/group.service';
-import {parseError} from 'helpers';
 
 export class GroupController implements types.Controller {
     public readonly router = express.Router();
@@ -23,7 +23,7 @@ export class GroupController implements types.Controller {
 
                 res.status(200).json(groups);
             } catch (error) {
-                parseError(error, req, res, next);
+                next(new ControllerError('Group', 'getAll', error));
             }
         });
 
@@ -34,7 +34,7 @@ export class GroupController implements types.Controller {
 
                 res.status(200).json(group);
             } catch (error) {
-                parseError(error, req, res, next);
+                next(new ControllerError('Group', 'createGroup', error));
             }
         });
 
@@ -47,7 +47,7 @@ export class GroupController implements types.Controller {
 
                     res.status(200).json(group);
                 } catch (error) {
-                    parseError(error, req, res, next);
+                    next(new ControllerError('Group', 'getGroupById', error));
                 }
             })
             .put(GroupValidator.validateGroup, async (req, res, next) => {
@@ -58,7 +58,7 @@ export class GroupController implements types.Controller {
 
                     res.status(200).json(group);
                 } catch (error) {
-                    parseError(error, req, res, next);
+                    next(new ControllerError('Group', 'updateGroup', error));
                 }
             })
             .delete(async (req, res, next) => {
@@ -68,7 +68,7 @@ export class GroupController implements types.Controller {
 
                     res.status(200).json();
                 } catch (error) {
-                    parseError(error, req, res, next);
+                    next(new ControllerError('Group', 'deleteGroup', error));
                 }
             });
     }

@@ -20,6 +20,7 @@
         "no-nested-ternary": "off",
         "consistent-return": "off",
         "no-param-reassign": "off",
+        "max-classes-per-file": "off",
         "prefer-destructuring": "off",
         "no-underscore-dangle": "off",
         "no-restricted-syntax": "off",
