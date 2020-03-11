@@ -1,6 +1,6 @@
 import httpErrors from 'http-errors';
 import express from 'express';
-import {Logger} from './logger.service';
+import {Logger} from 'services/logger.service';
 
 export class ServerError extends Error {
     constructor(public status: number, public message: string, public ext?: object) {
@@ -10,6 +10,17 @@ export class ServerError extends Error {
 
 export class ControllerError {
     constructor(public name: string, public method: string, public error: httpErrors.HttpError) {}
+}
+
+export class AuthError extends ServerError {
+    private static messages = {
+        401: 'Unauthorized',
+        403: 'Forbidden',
+    };
+
+    constructor(public status: 401 | 403) {
+        super(status, AuthError.messages[status]);
+    }
 }
 
 export const handleError: express.ErrorRequestHandler = (error: httpErrors.HttpError, request, response, next) => {

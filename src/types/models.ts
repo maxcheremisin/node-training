@@ -18,3 +18,5 @@ export type Group = {
     name: string;
     permissions: readonly Permission[];
 };
+
+export type AuthParams = Pick<User, 'login' | 'password'>;
