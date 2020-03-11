@@ -1,7 +1,9 @@
 import express from 'express';
+import cors from 'cors';
 import {Controller} from 'types';
 import {Logger} from 'services/logger.service';
 import {env} from 'config/env';
+import {auth} from 'middlewares/auth.mddleware';
 import {handleControllerError, handleError} from 'services/error-handler.service';
 
 export class Server {
@@ -18,6 +20,8 @@ export class Server {
     }
 
     private initializeMiddleware() {
+        this.server.use(cors());
+        this.server.use(auth());
         this.server.use(express.json());
         this.server.use((req, res, next) => {
             Logger.info(`Request ${req.method} ${req.url}`);
@@ -38,7 +42,7 @@ export class Server {
 
     public listen(): void {
         this.server.listen(this.port, () => {
-            console.log(`Server listening on the port ${this.port}`);
+            Logger.info(`Server listening on the port ${this.port}`);
         });
     }
 }

@@ -21,4 +21,5 @@ export const env = {
     log: {
         level: process.env.LOG_LEVEL || 'silly',
     },
+    jwtSecret: process.env.JWT_SECRET || '',
 };
