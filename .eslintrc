@@ -7,7 +7,8 @@
     "plugins": ["@typescript-eslint"],
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true
     },
     "rules": {
         "eqeqeq": "off",
@@ -33,6 +34,7 @@
         "import/no-unresolved": "off",
         "import/no-default-export": "error",
         "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.spec.ts"]}],
         "@typescript-eslint/camelcase": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-interface": "off",
