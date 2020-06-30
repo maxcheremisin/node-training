@@ -8,7 +8,7 @@ const GroupSchema: GroupRules = {
     name: joi.string(),
     permissions: joi
         .array()
-        .allow(...AllPermissions)
+        .items(AllPermissions)
         .unique(),
 };
 
